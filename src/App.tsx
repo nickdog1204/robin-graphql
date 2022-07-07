@@ -22,15 +22,39 @@ const client = new ApolloClient({
     cache: new InMemoryCache()
 });
 
-client.query({
-    query: gql`
-        {
-            organization(login: "the-road-to-learn-react") {
-                name
-                url
+const ADD_STAR = gql`
+    mutation AddStar($repoId: ID!) {
+        addStar(input: {starrableId: $repoId}) {
+            starrable {
+                id
+                viewerHasStarred
             }
         }
-    `
+    
+    }
+`
+
+
+client.query({
+    query: gql`
+        query($organization: String!){
+            organization(login: $organization) {
+                name
+                url
+                repositories(first: 5) {
+                    edges {
+                        node {
+                            name
+                            url
+                        }
+                    }
+                }
+            }
+        }
+    `,
+    variables: {
+        organization: "the-road-to-learn-react"
+    }
 })
     .then(result => console.log({result}));
 
