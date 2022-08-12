@@ -1,10 +1,4 @@
-import {FC} from "react";
 
-const Issue: FC = () => {
-    return (
-        <p>I am Footer</p>
-    )
+import IssueList from "./IssueList";
 
-}
-
-export default Issue;
+export default IssueList;

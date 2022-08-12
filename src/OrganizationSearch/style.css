@@ -1,0 +1,10 @@
+.Navigation-search {
+    padding: 0 10px;
+}
+
+@media only screen and (max-device-width: 480px) {
+
+    .Navigation-search {
+        padding: 10px 10px;
+    }
+}

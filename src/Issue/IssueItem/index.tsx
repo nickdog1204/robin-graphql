@@ -1,8 +1,24 @@
-import {FC} from "react";
+import {FC, PropsWithChildren, ReactElement} from "react";
+import {IIssue} from "../../models";
+import './style.css'
+import Link from "../../Link";
 
-const IssueItem: FC = () => {
+export interface IIssueItemProps {
+    issue: IIssue
+}
+
+export type IssueFC = (it: PropsWithChildren<IIssueItemProps>) => ReactElement;
+
+const IssueItem: IssueFC = ({issue}) => {
     return (
-        <p>I am Footer</p>
+        <div className="IssueItem">
+            <div className="IssueItem-content">
+                <h3>
+                    <Link href={issue.url}>{issue.title}</Link>
+                </h3>
+                <div dangerouslySetInnerHTML={{__html: issue.bodyHTML}}/>
+            </div>
+        </div>
     )
 
 }

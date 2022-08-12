@@ -1,34 +1,48 @@
-import {FC} from "react";
+import {FC, PropsWithChildren,} from "react";
 import '../style.css'
 import {FetchMoreFunType, IPageInfo, IRepositories, IRepositoryItem, UpdateQueryTypeForRepos} from "../../models";
 import RepositoryItem from "../RepositoryItem";
-import Button from "../../Button";
-import Loading from "../../Loading";
 import FetchMore from "../../FetchMore";
+import IssueList from "../../Issue";
 
-const RepositoryList: FC<{
+interface IRepositoryListProps<VariablesType, T> {
     repositories: IRepositoryItem[];
-    fetchMore: FetchMoreFunType;
-    updateQueryTypeForRepos: UpdateQueryTypeForRepos
+    fetchMore: FetchMoreFunType<VariablesType, T>;
+    updateQueryTypeForRepos: UpdateQueryTypeForRepos<VariablesType, T>
     pageInfo: IPageInfo;
     isLoading: boolean;
-}> = ({repositories, fetchMore, updateQueryTypeForRepos, pageInfo, isLoading}) => {
+    variables: VariablesType;
+}
 
+const RepositoryList = <VariableType, T>
+({
+     repositories,
+     fetchMore,
+     updateQueryTypeForRepos,
+     pageInfo,
+     isLoading,
+     variables
+ }: PropsWithChildren<IRepositoryListProps<VariableType, T>>
+) => {
     return (
         <>
             {repositories.map(repoItem => {
                 return (
                     <div key={repoItem.id} className="RepositoryItem">
                         <RepositoryItem {...repoItem}/>
+
+                        <IssueList
+                            repositoryName={repoItem.name}
+                            repositoryOwner={repoItem.owner.login}
+                        />
                     </div>
                 )
             })}
-            {/*{isLoading ? <Loading/> :*/}
-            {/*    pageInfo.hasNextPage &&*/}
-            {/*    <button type='button' onClick={() => onFetchMoreBtnClick(pageInfo.endCursor)}>更多倉儲..</button>*/}
-            {/*}*/}
-            <FetchMore isLoading={isLoading} hasNextPage={pageInfo.hasNextPage} variables={{cursor: pageInfo.endCursor}}
-                       fetchMore={fetchMore} updateQuery={updateQueryTypeForRepos}>倉儲</FetchMore>
+            <FetchMore<VariableType, T> isLoading={isLoading} hasNextPage={pageInfo.hasNextPage}
+                                        variables={variables}
+                                        fetchMore={fetchMore} updateQuery={updateQueryTypeForRepos}>
+                倉儲
+            </FetchMore>
         </>
     );
 

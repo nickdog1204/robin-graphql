@@ -1,20 +1,20 @@
 import {ReactNode} from "react";
 import {ApolloQueryResult} from "@apollo/client";
 
-export interface IFetchMoreProps<ResultType = IQueryReposResult> {
+export interface IFetchMoreProps<VariableType, ResultType> {
     isLoading: boolean;
     hasNextPage: boolean;
-    variables: IQueryReposVariables;
-    fetchMore: FetchMoreFunType<ResultType>,
-    updateQuery: UpdateQueryTypeForRepos,
-    children: ReactNode
+    variables: VariableType;
+    fetchMore: FetchMoreFunType<VariableType, ResultType>,
+    updateQuery: UpdateQueryTypeForRepos<VariableType, ResultType>,
+    // children: ReactNode
 }
 
-export type FetchMoreFunType<ResultType = IQueryReposResult> = (it: { variables: { cursor: string }, updateQuery: UpdateQueryTypeForRepos }) => Promise<ApolloQueryResult<any>>
+export type FetchMoreFunType<VariableType, ResultType> = (it: { variables: VariableType, updateQuery: UpdateQueryTypeForRepos<VariableType, ResultType> }) => Promise<ApolloQueryResult<ResultType>>
 
-export type UpdateQueryTypeForRepos<T = IQueryReposResult> = (
+export type UpdateQueryTypeForRepos<VT, T> = (
     previousQueryResult: T,
-    it: { fetchMoreResult: T, variables: IQueryReposVariables }) => T
+    it: { fetchMoreResult: T, variables: VT }) => T
 
 export type ViewerSubscriptionType = 'SUBSCRIBED' | 'UNSUBSCRIBED';
 const SUBSCRIBED: ViewerSubscriptionType = 'SUBSCRIBED';
@@ -62,6 +62,11 @@ export interface IQueryReposVariables {
     cursor: string;
 }
 
+export interface IQueryOrganizationReposVariables {
+    organizationName: string;
+    cursor?: string;
+}
+
 export interface IRepositories {
     edges: { node: IRepositoryItem }[]
     pageInfo: IPageInfo
@@ -93,3 +98,30 @@ export interface IWatchRepoMutationResult {
         }
     }
 }
+
+
+export interface IQueryIssuesForRepositoryResult {
+    repository: {
+        issues: {
+            edges: IIssueEdge[]
+        }
+    }
+}
+
+export interface IIssueEdge {
+    node: IIssue
+}
+
+export interface IIssue {
+    id: string
+    number: number;
+    state: string;
+    title: string;
+    url: string;
+    bodyHTML: string;
+}
+
+export type IssueState =
+    | 'NONE'
+    | 'OPEN'
+    | 'CLOSED'

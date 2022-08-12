@@ -1,15 +1,23 @@
 import Profile from "../Profile";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
 import './style.css';
 import * as routes from "../constants/routes";
 import Organization from "../Organization";
 import Navigation from "./Navigation";
+import {useState} from "react";
 
 const App = () => {
+    const [organizationName, setOrganizationName] = useState('the-road-to-learn-react');
+    const organizationSearchHandler = (organizationName: string) => {
+        console.log({organizationName})
+        setOrganizationName(organizationName);
+    }
     return (
         <BrowserRouter>
             <div className="App">
-                <Navigation/>
+                <Navigation
+                    organizationName={organizationName}
+                    onOrganizationSearch={organizationSearchHandler}/>
 
                 <div className="App-main">
                     <Routes>
@@ -17,7 +25,7 @@ const App = () => {
                             path={routes.ORGANIZATION}
                             element={
                                 <div className="App-content_large-header">
-                                    <Organization organizationName="the-road-to-learn-react"/>
+                                    <Organization organizationName={organizationName}/>
                                 </div>
                             }>
                         </Route>

@@ -1,8 +1,35 @@
-import {FC} from "react";
+import {FC, HTMLInputTypeAttribute, PropsWithChildren, ReactElement} from "react";
+import './style.css';
 
-const Input: FC = () => {
+export interface IInputProps {
+    color: 'white' | 'black';
+    type?: HTMLInputTypeAttribute;
+    value: string;
+    onChange: (val: string) => void;
+}
+
+export type InputFC = (it: PropsWithChildren<IInputProps>) => ReactElement
+
+const Input: InputFC = (
+    {
+        children,
+        type = 'text',
+        color,
+        value,
+        onChange
+    }
+) => {
     return (
-        <p>I am Footer</p>
+        <input
+            type={type}
+            onChange={(event) => {
+                onChange(event.target.value)
+            }}
+            className={`Input Input_${color}`}
+            value={value}
+        >
+            {children}
+        </input>
     )
 
 }
